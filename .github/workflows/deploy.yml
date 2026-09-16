@@ -22,7 +22,8 @@ jobs:
       - name: Install Core Dependencies
         run: |
           npm install -g pnpm
-          pnpm install
+          pnpm install --no-frozen-lockfile
+          pnpm approve-builds
 
       - name: Download Pre-Compiled Static Assets
         run: |
