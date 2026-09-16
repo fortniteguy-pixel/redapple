@@ -1,0 +1,43 @@
+name: Compile and Deploy Terraria
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install Development Tools
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Core Dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      - name: Download Pre-Compiled Static Assets
+        run: |
+          wget https://npmjs.org
+          tar -xzf terraria-wasm-1.1.4.tgz --strip-components=1
+          rm terraria-wasm-1.1.4.tgz
+
+      - name: Setup GitHub Pages Website Configuration
+        uses: actions/configure-pages@v4
+
+      - name: Build Web Deployment Bundle
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Launch Unblocked Link
+        id: deployment
+        uses: actions/deploy-pages@v4
